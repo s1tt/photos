@@ -1,3 +1,4 @@
+import React from 'react';
 import { createPortal } from 'react-dom';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
@@ -12,15 +13,15 @@ const popupContentEl = document.getElementById('popup');
 const loaderContentEl = document.getElementById('loader');
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	// <React.StrictMode>
-	<IsLoadingContextProvider>
-		<PhotoDataContextProvider>
-			<PopUpContextProvider>
-				<RouterProvider router={router} />
-				{createPortal(<PopUp />, popupContentEl as HTMLElement)}
-				{createPortal(<Loader />, loaderContentEl as HTMLElement)}
-			</PopUpContextProvider>
-		</PhotoDataContextProvider>
-	</IsLoadingContextProvider>
-	// </React.StrictMode>
+	<React.StrictMode>
+		<IsLoadingContextProvider>
+			<PhotoDataContextProvider>
+				<PopUpContextProvider>
+					<RouterProvider router={router} />
+					{createPortal(<PopUp />, popupContentEl as HTMLElement)}
+					{createPortal(<Loader />, loaderContentEl as HTMLElement)}
+				</PopUpContextProvider>
+			</PhotoDataContextProvider>
+		</IsLoadingContextProvider>
+	</React.StrictMode>
 );

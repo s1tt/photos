@@ -1,7 +1,8 @@
 import axios from 'axios';
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useReducer } from 'react';
 import { IsLoadingContext } from '../../contexts/IsLoading.context';
 import { PopUpContext } from '../../contexts/PopUp.context';
+import { cardReducer } from '../../states/card.reducer';
 import { TOKEN, URL } from '../../utils/constants';
 import Button from '../Button/Button';
 import styles from './Card.module.css';
@@ -16,14 +17,22 @@ interface ICard {
 
 const Card: FC<ICard> = ({ src, alt, likes, isLiked, id }) => {
 	const { setIsLoading } = useContext(IsLoadingContext);
-	const [likesState, setLikesState] = useState<number>(likes);
-	const [isLikedState, setIsLikedState] = useState<boolean>(isLiked);
-	// const [isLoading, setIsLoading] = useState<boolean>(false);
 	const { setIsPopUpOpened, setCardId } = useContext(PopUpContext);
+	const [{ likesState, isLikedState }, dispatch] = useReducer(cardReducer, {
+		likesState: likes,
+		isLikedState: isLiked
+	});
 
 	useEffect(() => {
-		setLikesState(likes);
-	}, [likes]);
+		updateCard({ likesState: likes, isLikedState: isLiked });
+	}, [likes, isLiked]);
+
+	const updateCard = (newData: {
+		likesState: number;
+		isLikedState: boolean;
+	}) => {
+		dispatch({ type: 'UPDATE_CARD', payload: newData });
+	};
 
 	const likePhoto = async () => {
 		try {
@@ -33,8 +42,7 @@ const Card: FC<ICard> = ({ src, alt, likes, isLiked, id }) => {
 					Authorization: `Bearer ${TOKEN}`
 				}
 			});
-			setLikesState(res.data.photo.likes);
-			setIsLikedState(res.data.photo.liked_by_user);
+			res.data.photo && dispatch({ type: 'LIKE' });
 		} catch (e) {
 			console.log(e);
 		} finally {
@@ -50,8 +58,7 @@ const Card: FC<ICard> = ({ src, alt, likes, isLiked, id }) => {
 					Authorization: `Bearer ${TOKEN}`
 				}
 			});
-			setLikesState(res.data.photo.likes);
-			setIsLikedState(res.data.photo.liked_by_user);
+			res.data.photo && dispatch({ type: 'UNLIKE' });
 		} catch (e) {
 			console.log(e);
 		} finally {

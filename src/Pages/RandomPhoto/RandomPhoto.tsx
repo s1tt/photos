@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Button from '../../components/Button/Button';
 import Photo from '../../components/Photo/Photo';
@@ -31,17 +31,17 @@ const RandomPhoto = () => {
 		}
 	}, [setPhotoData, setIsLoading]);
 
+	useEffect(() => {
+		fetchingPhotoData();
+	}, [fetchingPhotoData]);
+
 	return (
 		<>
 			<Outlet />
 			<section className={styles.content}>
 				<h1>Random Photo</h1>
 				<Button onClick={fetchingPhotoData}>Generate random photo</Button>
-				<Photo
-					fetchingPhotoData={fetchingPhotoData}
-					photoData={photoData}
-					setPhotoData={setPhotoData}
-				/>
+				<Photo photoData={photoData} setPhotoData={setPhotoData} />
 			</section>
 		</>
 	);

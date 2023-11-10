@@ -1,16 +1,11 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { PhotoData } from '../../types';
 import Card from '../Card/Card';
 
 const Photo: FC<{
-	fetchingPhotoData: () => void;
 	photoData: PhotoData | null;
 	setPhotoData: (photoData: PhotoData) => void;
-}> = ({ fetchingPhotoData, photoData }) => {
-	useEffect(() => {
-		fetchingPhotoData();
-	}, [fetchingPhotoData]);
-
+}> = ({ photoData }) => {
 	return (
 		<>
 			{photoData && (
